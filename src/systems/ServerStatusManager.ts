@@ -30,7 +30,7 @@ export class ServerStatusManager {
       maxPlayers: 100,
       ping: Math.floor(Math.random() * 50) + 10,
       version: '1.20.1',
-      motd: '§6Welcome to MineFlare! §r🎮',
+      motd: '§6Welcome to Minecraft! §r🎮',
       lastUpdated: new Date(),
       uptime: Math.floor(Math.random() * 604800) // 0-7 days
     };

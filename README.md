@@ -1,6 +1,6 @@
-# Mineflare Discord Bot
+# Minecraft Discord Bot
 
-A powerful Discord bot for managing Mineflare Minecraft servers with advanced automation systems.
+A powerful Discord bot for managing Minecraft servers with advanced automation systems.
 
 ## 🎯 Features
 
@@ -120,20 +120,18 @@ The dashboard displays:
 ## 📋 Join Command Options
 
 ```
-/join server:play.mineflare.com
+/join server:play.minecraft.com
       java-version:17
-      account-mode:offline
+      account-type:offline
       username:CustomName
-      account-type:cracked
       message:"Joining the server!"
 ```
 
 ### Options
 - `server` (required) - Server address
 - `java-version` (optional) - 1.8, 11, 16, 17, 21 (default: 17)
-- `account-mode` (optional) - offline, premium (default: offline)
+- `account-type` (optional) - offline, premium, cracked (default: cracked)
 - `username` (optional) - Custom name (auto-generated if offline)
-- `account-type` (optional) - cracked, premium (default: cracked)
 - `message` (optional) - Custom join message
 
 ## 🔧 Configuration

@@ -1,7 +1,7 @@
 [
   {
     "name": "status",
-    "description": "Check Mineflare server status - Made by NeoNinja_",
+    "description": "Check Minecraft server status - Made by NeoNinja_",
     "options": [
       {
         "name": "server",
@@ -42,13 +42,14 @@
         ]
       },
       {
-        "name": "account-mode",
+        "name": "account-type",
         "description": "Account type",
         "type": 3,
         "required": false,
         "choices": [
           { "name": "Offline", "value": "offline" },
-          { "name": "Premium", "value": "premium" }
+          { "name": "Premium", "value": "premium" },
+          { "name": "Cracked", "value": "cracked" }
         ]
       },
       {
@@ -56,16 +57,6 @@
         "description": "Custom username (auto-generate if empty)",
         "type": 3,
         "required": false
-      },
-      {
-        "name": "account-type",
-        "description": "Account type",
-        "type": 3,
-        "required": false,
-        "choices": [
-          { "name": "Cracked", "value": "cracked" },
-          { "name": "Premium", "value": "premium" }
-        ]
       },
       {
         "name": "message",

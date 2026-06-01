@@ -50,7 +50,7 @@ function generateRandomUsername(): string {
   return `${adjectives[Math.floor(Math.random() * adjectives.length)]}${nouns[Math.floor(Math.random() * nouns.length)]}${number}`;
 }
 
-// Get server status from Mineflare
+// Get server status from Minecraft
 async function getServerStatus(serverAddress: string): Promise<any> {
   try {
     const { stdout } = await execAsync(`ping -c 1 ${serverAddress}`);
@@ -74,7 +74,7 @@ async function getServerStatus(serverAddress: string): Promise<any> {
 client.on('ready', () => {
   console.log(`✅ Bot logged in as ${client.user?.tag}`);
   client.user?.setPresence({
-    activities: [{ name: 'Mineflare Servers 🎮 | Made by NeoNinja_', type: ActivityType.Watching }],
+    activities: [{ name: 'Minecraft Servers 🎮 | Made by NeoNinja_', type: ActivityType.Watching }],
     status: 'online'
   });
 });
@@ -86,7 +86,7 @@ client.on('interactionCreate', async (interaction) => {
     // STATUS COMMAND
     if (interaction.commandName === 'status') {
       await interaction.deferReply();
-      const serverAddress = interaction.options.getString('server') || 'play.mineflare.com';
+      const serverAddress = interaction.options.getString('server') || 'play.minecraft.com';
       const status = await getServerStatus(serverAddress);
 
       const embed = new EmbedBuilder()
@@ -98,7 +98,7 @@ client.on('interactionCreate', async (interaction) => {
           { name: '⚡ Latency', value: `\`\`${status.latency}ms\`\``, inline: true }
         )
         .setColor(status.online ? '#00FF00' : '#FF0000')
-        .setFooter({ text: '🎮 Made by NeoNinja_ | Mineflare Discord Bot' })
+        .setFooter({ text: '🎮 Made by NeoNinja_ | Minecraft Discord Bot' })
         .setTimestamp();
 
       await interaction.editReply({ embeds: [embed] });
@@ -109,10 +109,9 @@ client.on('interactionCreate', async (interaction) => {
       const serverAddress = interaction.options.getString('server');
       const botCount = interaction.options.getInteger('count') || 1;
       const javaVersion = interaction.options.getString('java-version') || '17';
-      const accountMode = interaction.options.getString('account-mode') || 'offline';
-      const customUsername = interaction.options.getString('username');
       const accountType = interaction.options.getString('account-type') || 'cracked';
-      const joinMessage = interaction.options.getString('message') || 'Joining Mineflare server...';
+      const customUsername = interaction.options.getString('username');
+      const joinMessage = interaction.options.getString('message') || 'Joining Minecraft server...';
 
       if (!serverAddress) {
         return await interaction.reply({
@@ -189,7 +188,6 @@ client.on('interactionCreate', async (interaction) => {
           { name: '🎮 Server', value: `\`\`${serverAddress}\`\``, inline: true },
           { name: '☕ Java Version', value: `\`\`${javaVersion}\`\``, inline: true },
           { name: '🤖 Bots Joining', value: `\`\`${createdSessions.length}\`\``, inline: true },
-          { name: '📝 Account Mode', value: `\`\`${accountMode}\`\``, inline: true },
           { name: '🔑 Account Type', value: `\`\`${accountType}\`\``, inline: true },
           { name: '⏳ Status', value: '🟡 Connecting...', inline: true },
           {
@@ -199,7 +197,7 @@ client.on('interactionCreate', async (interaction) => {
           }
         )
         .setColor('#FFFF00')
-        .setFooter({ text: '⚔️ Made by NeoNinja_ | Mineflare Discord Bot' })
+        .setFooter({ text: '⚔️ Made by NeoNinja_ | Minecraft Discord Bot' })
         .setTimestamp();
 
       await interaction.editReply({ embeds: [embed] });
@@ -224,7 +222,7 @@ client.on('interactionCreate', async (interaction) => {
             }
           )
           .setColor('#00FF00')
-          .setFooter({ text: '✅ Made by NeoNinja_ | Mineflare Discord Bot' })
+          .setFooter({ text: '✅ Made by NeoNinja_ | Minecraft Discord Bot' })
           .setTimestamp();
 
         try {
@@ -239,7 +237,7 @@ client.on('interactionCreate', async (interaction) => {
     // HELP COMMAND
     if (interaction.commandName === 'help') {
       const embed = new EmbedBuilder()
-        .setTitle('📚 Mineflare Bot Commands')
+        .setTitle('📚 Minecraft Bot Commands')
         .setDescription('Complete list of all available commands')
         .addFields(
           {
@@ -249,14 +247,14 @@ client.on('interactionCreate', async (interaction) => {
           },
           {
             name: '💰 Automation Systems',
-            value: '`/trading` - Trading system\n`/enchanting` - Enchanting system\n`/brewing` - Brewing system\n`/fishing` - Fishing system\n`/mobfarm` - Mob farm system\n`/mining` - Mining system\n`/pathfinding` - Pathfinding system',
+            value: '`/trading` - Trading system\n`/enchanting` - Enchanting system\n`/brewing` - Brewing system\n`/fishing` - Fishing system\n`/mobfarm` - Mob farm system\n`/mining` - Mining syst[...]',
             inline: false
           },
           { name: '📊 Analytics', value: '`/stats` - View your statistics\n`/help` - Show this message', inline: false },
           { name: '🎯 Features', value: '✅ Unlimited bot instances\n✅ Auto-mining system\n✅ Multi-server support\n✅ Real-time statistics', inline: false }
         )
         .setColor('#0099FF')
-        .setFooter({ text: '📚 Made by NeoNinja_ | Mineflare Discord Bot' })
+        .setFooter({ text: '📚 Made by NeoNinja_ | Minecraft Discord Bot' })
         .setTimestamp();
 
       await interaction.reply({ embeds: [embed], ephemeral: true });
@@ -289,7 +287,7 @@ client.on('interactionCreate', async (interaction) => {
             { name: '⏱️ Start Time', value: `<t:${Math.floor(Date.now() / 1000)}:t>`, inline: true }
           )
           .setColor('#FF6347')
-          .setFooter({ text: '⛏️ Made by NeoNinja_ | Mineflare Discord Bot' })
+          .setFooter({ text: '⛏️ Made by NeoNinja_ | Minecraft Discord Bot' })
           .setTimestamp();
         await interaction.reply({ embeds: [embed] });
       } else if (subcommand === 'stop') {
@@ -298,7 +296,7 @@ client.on('interactionCreate', async (interaction) => {
           .setTitle('⛏️ Auto-Mining Stopped')
           .setDescription('Mining session has ended')
           .setColor('#FF0000')
-          .setFooter({ text: '⛏️ Made by NeoNinja_ | Mineflare Discord Bot' })
+          .setFooter({ text: '⛏️ Made by NeoNinja_ | Minecraft Discord Bot' })
           .setTimestamp();
         await interaction.reply({ embeds: [embed] });
       } else if (subcommand === 'status') {
@@ -430,7 +428,7 @@ client.on('interactionCreate', async (interaction) => {
             : [{ name: 'No Active Bots', value: 'Use \`/join\` to start', inline: false }]
         )
         .setColor('#00FF00')
-        .setFooter({ text: '🤖 Made by NeoNinja_ | Mineflare Discord Bot' })
+        .setFooter({ text: '🤖 Made by NeoNinja_ | Minecraft Discord Bot' })
         .setTimestamp();
 
       await interaction.reply({ embeds: [embed] });
@@ -473,7 +471,7 @@ client.on('interactionCreate', async (interaction) => {
           { name: '📊 Remaining Bots', value: `\`\`${Math.max(0, userBots.length - botsToRemove.length)}\`\``, inline: true }
         )
         .setColor('#FF6347')
-        .setFooter({ text: '👋 Made by NeoNinja_ | Mineflare Discord Bot' })
+        .setFooter({ text: '👋 Made by NeoNinja_ | Minecraft Discord Bot' })
         .setTimestamp();
 
       await interaction.reply({ embeds: [embed] });
@@ -485,7 +483,7 @@ client.on('interactionCreate', async (interaction) => {
       .setDescription('An error occurred while processing your command.')
       .addFields({ name: '📝 Error Details', value: '`Check bot console for details`', inline: false })
       .setColor('#FF0000')
-      .setFooter({ text: '❌ Made by NeoNinja_ | Mineflare Discord Bot' })
+      .setFooter({ text: '❌ Made by NeoNinja_ | Minecraft Discord Bot' })
       .setTimestamp();
 
     try {
