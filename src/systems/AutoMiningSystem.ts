@@ -1,110 +1,66 @@
 import { EmbedBuilder } from 'discord.js';
 
-interface MiningJob {
-  id: string;
-  location: string;
-  blockType: string;
-  quantityNeeded: number;
-  quantityMined: number;
-  status: 'pending' | 'in-progress' | 'completed' | 'failed';
-  startTime: Date;
-  endTime?: Date;
-}
-
-interface AutoMiningSession {
+interface MiningSession {
   userId: string;
   sessionId: string;
-  jobs: MiningJob[];
-  totalBlocksMined: number;
-  totalTimeSpent: number;
+  blocksMinedCount: number;
+  totalOreValue: number;
   startTime: Date;
   status: 'active' | 'paused' | 'stopped';
+  interval?: NodeJS.Timeout;
 }
 
 export class AutoMiningSystem {
-  private sessions: Map<string, AutoMiningSession> = new Map();
-  private blockTypes = [
-    'Stone', 'Dirt', 'Cobblestone', 'Coal Ore', 'Iron Ore', 'Gold Ore',
-    'Diamond Ore', 'Emerald Ore', 'Lapis Ore', 'Redstone Ore'
-  ];
+  private sessions: Map<string, MiningSession> = new Map();
 
-  startAutoMining(userId: string, sessionId: string): AutoMiningSession {
-    const session: AutoMiningSession = {
-      userId,
-      sessionId,
-      jobs: [],
-      totalBlocksMined: 0,
-      totalTimeSpent: 0,
-      startTime: new Date(),
-      status: 'active'
-    };
-    this.sessions.set(sessionId, session);
+  startMining(userId: string, sessionId: string): MiningSession {
+    let session = this.sessions.get(sessionId);
+    
+    if (!session) {
+      session = {
+        userId,
+        sessionId,
+        blocksMinedCount: 0,
+        totalOreValue: 0,
+        startTime: new Date(),
+        status: 'active'
+      };
+      this.sessions.set(sessionId, session);
+    } else {
+      session.status = 'active';
+    }
+
+    // Clear any existing interval
+    if (session.interval) clearInterval(session.interval);
+
+    // Simulate mining with random intervals
+    session.interval = setInterval(() => {
+      const currentSession = this.sessions.get(sessionId);
+      if (!currentSession || currentSession.status !== 'active') {
+        if (currentSession?.interval) clearInterval(currentSession.interval);
+        return;
+      }
+
+      const blockValue = Math.floor(Math.random() * 100) + 50;
+      currentSession.blocksMinedCount++;
+      currentSession.totalOreValue += blockValue;
+    }, 3000);
+
     return session;
   }
 
-  addMiningJob(sessionId: string, blockType: string, quantity: number, location: string): MiningJob | null {
-    const session = this.sessions.get(sessionId);
-    if (!session) return null;
-
-    const job: MiningJob = {
-      id: `job-${Date.now()}`,
-      blockType,
-      location,
-      quantityNeeded: quantity,
-      quantityMined: 0,
-      status: 'pending',
-      startTime: new Date()
-    };
-
-    session.jobs.push(job);
-    return job;
-  }
-
-  mineBlock(sessionId: string, jobId: string): boolean {
-    const session = this.sessions.get(sessionId);
-    if (!session) return false;
-
-    const job = session.jobs.find(j => j.id === jobId);
-    if (!job) return false;
-
-    job.quantityMined++;
-    session.totalBlocksMined++;
-
-    if (job.quantityMined >= job.quantityNeeded) {
-      job.status = 'completed';
-      job.endTime = new Date();
-    } else if (job.status === 'pending') {
-      job.status = 'in-progress';
-    }
-
-    return true;
-  }
-
-  pauseMining(sessionId: string): void {
-    const session = this.sessions.get(sessionId);
-    if (session) session.status = 'paused';
-  }
-
-  resumeMining(sessionId: string): void {
-    const session = this.sessions.get(sessionId);
-    if (session) session.status = 'active';
-  }
-
-  stopMining(sessionId: string): AutoMiningSession | undefined {
+  stopMining(sessionId: string): MiningSession | undefined {
     const session = this.sessions.get(sessionId);
     if (session) {
       session.status = 'stopped';
+      if (session.interval) clearInterval(session.interval);
       this.sessions.delete(sessionId);
     }
     return session;
   }
 
-  getSession(sessionId: string): AutoMiningSession | undefined {
+  getSession(sessionId: string): MiningSession | undefined {
     return this.sessions.get(sessionId);
-  }
-
-  getBlockTypes(): string[] {
-    return this.blockTypes;
   }
 
   getSessionEmbed(sessionId: string): EmbedBuilder | null {
@@ -112,20 +68,25 @@ export class AutoMiningSystem {
     if (!session) return null;
 
     const duration = Math.floor((Date.now() - session.startTime.getTime()) / 1000);
-    const minutes = Math.floor(duration / 60);
-    const completedJobs = session.jobs.filter(j => j.status === 'completed').length;
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = duration % 60;
+    const blocksPerHour = Math.floor((session.blocksMinedCount / Math.max(duration, 1)) * 3600);
+    const valuePerHour = Math.floor((session.totalOreValue / Math.max(duration, 1)) * 3600);
 
     return new EmbedBuilder()
-      .setTitle('⛏️ Auto Mining System Status')
+      .setTitle('⛏️ Auto-Mining System')
+      .setDescription('Real-time mining statistics and performance metrics')
       .addFields(
-        { name: 'Status', value: session.status, inline: true },
-        { name: 'Total Blocks Mined', value: `${session.totalBlocksMined}`, inline: true },
-        { name: 'Completed Jobs', value: `${completedJobs}/${session.jobs.length}`, inline: true },
-        { name: 'Duration', value: `${minutes} minutes`, inline: true },
-        { name: 'Blocks/Minute', value: `${Math.floor(session.totalBlocksMined / (duration / 60))}`, inline: true },
-        { name: 'Active Job', value: session.jobs.find(j => j.status === 'in-progress')?.blockType || 'None', inline: true }
+        { name: '📊 Status', value: `\`\`${session.status.toUpperCase()}\`\``, inline: true },
+        { name: '🔨 Blocks Mined', value: `\`\`${session.blocksMinedCount}\`\``, inline: true },
+        { name: '💰 Total Value', value: `\`\`${session.totalOreValue.toLocaleString()} coins\`\``, inline: true },
+        { name: '⏱️ Duration', value: `\`\`${hours}h ${minutes}m ${seconds}s\`\``, inline: true },
+        { name: '📈 Blocks/Hour', value: `\`\`${blocksPerHour}\`\``, inline: true },
+        { name: '💵 Value/Hour', value: `\`\`${valuePerHour.toLocaleString()} coins\`\``, inline: true }
       )
-      .setColor(0x8B4513)
+      .setColor('#A9A9A9')
+      .setFooter({ text: '⛏️ Made by NeoNinja_ | Mineflare Discord Bot' })
       .setTimestamp();
   }
 }

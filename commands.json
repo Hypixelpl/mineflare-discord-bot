@@ -1,11 +1,11 @@
 [
   {
     "name": "status",
-    "description": "Check the status of a Mineflare server",
+    "description": "Check Mineflare server status - Made by NeoNinja_",
     "options": [
       {
         "name": "server",
-        "description": "Server address (e.g., play.mineflare.com)",
+        "description": "Server address to check",
         "type": 3,
         "required": false
       }
@@ -13,17 +13,24 @@
   },
   {
     "name": "join",
-    "description": "Join a Mineflare server with a bot account",
+    "description": "Join server with bot account(s) - Made by NeoNinja_",
     "options": [
       {
         "name": "server",
-        "description": "Server address to join",
+        "description": "Server address",
         "type": 3,
         "required": true
       },
       {
+        "name": "count",
+        "description": "Number of bots to join (unlimited)",
+        "type": 4,
+        "required": false,
+        "min_value": 1
+      },
+      {
         "name": "java-version",
-        "description": "Java version (e.g., 1.8, 11, 17, 21)",
+        "description": "Java version",
         "type": 3,
         "required": false,
         "choices": [
@@ -36,7 +43,7 @@
       },
       {
         "name": "account-mode",
-        "description": "Account mode (offline or premium)",
+        "description": "Account type",
         "type": 3,
         "required": false,
         "choices": [
@@ -46,13 +53,13 @@
       },
       {
         "name": "username",
-        "description": "Custom username (auto-generated if cracked, ignored if premium)",
+        "description": "Custom username (auto-generate if empty)",
         "type": 3,
         "required": false
       },
       {
         "name": "account-type",
-        "description": "Account type (cracked or premium)",
+        "description": "Account type",
         "type": 3,
         "required": false,
         "choices": [
@@ -62,116 +69,117 @@
       },
       {
         "name": "message",
-        "description": "Custom join message to display",
+        "description": "Custom join message",
         "type": 3,
         "required": false
       }
     ]
   },
   {
-    "name": "minecraftview",
-    "description": "View bot perspective in Minecraft"
-  },
-  {
-    "name": "setdomain",
-    "description": "Set custom domain for dashboard",
+    "name": "leave",
+    "description": "Disconnect bot(s) - Made by NeoNinja_",
     "options": [
       {
-        "name": "domain",
-        "description": "Domain address (e.g., example.com or localhost:3000)",
-        "type": 3,
+        "name": "all",
+        "description": "Disconnect all bots",
+        "type": 5,
         "required": false
-      }
-    ]
-  },
-  {
-    "name": "trading",
-    "description": "Advanced trading system automation",
-    "options": [
-      {
-        "name": "status",
-        "description": "Check trading status",
-        "type": 1,
-        "required": false
-      }
-    ]
-  },
-  {
-    "name": "enchanting",
-    "description": "Enchanting automation system",
-    "options": [
-      {
-        "name": "status",
-        "description": "Check enchanting status",
-        "type": 1,
-        "required": false
-      }
-    ]
-  },
-  {
-    "name": "brewing",
-    "description": "Brewing automation system",
-    "options": [
-      {
-        "name": "status",
-        "description": "Check brewing status",
-        "type": 1,
-        "required": false
-      }
-    ]
-  },
-  {
-    "name": "fishing",
-    "description": "Fishing automation system",
-    "options": [
-      {
-        "name": "status",
-        "description": "Check fishing status",
-        "type": 1,
-        "required": false
-      }
-    ]
-  },
-  {
-    "name": "mobfarm",
-    "description": "Mob farm automation system",
-    "options": [
-      {
-        "name": "status",
-        "description": "Check mob farm status",
-        "type": 1,
-        "required": false
-      }
-    ]
-  },
-  {
-    "name": "pathfinding",
-    "description": "Advanced pathfinding with waypoints",
-    "options": [
-      {
-        "name": "addwaypoint",
-        "description": "Add a waypoint",
-        "type": 1,
-        "options": [
-          { "name": "name", "description": "Waypoint name", "type": 3, "required": true },
-          { "name": "x", "description": "X coordinate", "type": 10, "required": true },
-          { "name": "y", "description": "Y coordinate", "type": 10, "required": true },
-          { "name": "z", "description": "Z coordinate", "type": 10, "required": true }
-        ]
-      },
-      {
-        "name": "status",
-        "description": "Check pathfinding status",
-        "type": 1
       }
     ]
   },
   {
     "name": "instances",
-    "description": "View all running bot instances"
+    "description": "View all running bot instances - Made by NeoNinja_"
   },
   {
-    "name": "leave",
-    "description": "Disconnect the bot from the server"
+    "name": "trading",
+    "description": "View trading system status - Made by NeoNinja_"
+  },
+  {
+    "name": "enchanting",
+    "description": "View enchanting system status - Made by NeoNinja_"
+  },
+  {
+    "name": "brewing",
+    "description": "View brewing system status - Made by NeoNinja_"
+  },
+  {
+    "name": "fishing",
+    "description": "View fishing system status - Made by NeoNinja_"
+  },
+  {
+    "name": "mobfarm",
+    "description": "View mob farm system status - Made by NeoNinja_"
+  },
+  {
+    "name": "mining",
+    "description": "Control auto-mining system - Made by NeoNinja_",
+    "options": [
+      {
+        "name": "start",
+        "description": "Start auto-mining",
+        "type": 1
+      },
+      {
+        "name": "stop",
+        "description": "Stop auto-mining",
+        "type": 1
+      },
+      {
+        "name": "status",
+        "description": "View mining status",
+        "type": 1
+      }
+    ]
+  },
+  {
+    "name": "pathfinding",
+    "description": "Manage waypoints and pathfinding - Made by NeoNinja_",
+    "options": [
+      {
+        "name": "addwaypoint",
+        "description": "Add a new waypoint",
+        "type": 1,
+        "options": [
+          {
+            "name": "name",
+            "description": "Waypoint name",
+            "type": 3,
+            "required": true
+          },
+          {
+            "name": "x",
+            "description": "X coordinate",
+            "type": 10,
+            "required": true
+          },
+          {
+            "name": "y",
+            "description": "Y coordinate",
+            "type": 10,
+            "required": true
+          },
+          {
+            "name": "z",
+            "description": "Z coordinate",
+            "type": 10,
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "status",
+        "description": "View pathfinding status",
+        "type": 1
+      }
+    ]
+  },
+  {
+    "name": "help",
+    "description": "Show bot commands and features - Made by NeoNinja_"
+  },
+  {
+    "name": "stats",
+    "description": "View bot statistics - Made by NeoNinja_"
   }
 ]

@@ -35,7 +35,7 @@ export class StatsManager {
         totalProfit: 0,
         totalBlocksMined: 0,
         totalTasksCompleted: 0,
-        averageSessionDuration: 0
+        totalBotsJoined: 0
       });
     }
   }
@@ -46,7 +46,7 @@ export class StatsManager {
 
     session.endTime = new Date();
     const userStats = this.userStats.get(session.userId);
-    
+
     if (userStats) {
       userStats.totalSessions++;
       userStats.totalProfit += session.totalProfitCoins;
@@ -71,23 +71,25 @@ export class StatsManager {
       totalSessions: 0,
       totalProfit: 0,
       totalBlocksMined: 0,
-      totalTasksCompleted: 0
+      totalTasksCompleted: 0,
+      totalBotsJoined: 0
     };
 
     const activeSessions = Array.from(this.sessions.values()).filter(s => s.userId === userId).length;
 
     return new EmbedBuilder()
-      .setTitle('📊 Bot Statistics')
+      .setTitle('📊 Your Bot Statistics')
+      .setDescription('Comprehensive overview of your bot performance')
       .addFields(
-        { name: 'Total Sessions', value: `${userStats.totalSessions}`, inline: true },
-        { name: 'Active Sessions', value: `${activeSessions}`, inline: true },
-        { name: 'Total Profit', value: `${userStats.totalProfit} coins`, inline: true },
-        { name: 'Blocks Mined', value: `${userStats.totalBlocksMined}`, inline: true },
-        { name: 'Tasks Completed', value: `${userStats.totalTasksCompleted}`, inline: true },
-        { name: 'Avg Session Duration', value: `${Math.floor(userStats.averageSessionDuration / 60)}m`, inline: true }
+        { name: '📈 Total Sessions', value: `\`\`${userStats.totalSessions}\`\``, inline: true },
+        { name: '🟢 Active Sessions', value: `\`\`${activeSessions}\`\``, inline: true },
+        { name: '💰 Total Profit', value: `\`\`${userStats.totalProfit.toLocaleString()} coins\`\``, inline: true },
+        { name: '⛏️ Blocks Mined', value: `\`\`${userStats.totalBlocksMined.toLocaleString()}\`\``, inline: true },
+        { name: '✅ Tasks Completed', value: `\`\`${userStats.totalTasksCompleted}\`\``, inline: true },
+        { name: '🤖 Bots Joined', value: `\`\`${userStats.totalBotsJoined}\`\``, inline: true }
       )
-      .setColor(0x4169E1)
-      .setFooter({ text: 'Keep mining and trading to increase stats!' })
+      .setColor('#4169E1')
+      .setFooter({ text: '📊 Made by NeoNinja_ | Keep grinding to increase your stats!' })
       .setTimestamp();
   }
 }
