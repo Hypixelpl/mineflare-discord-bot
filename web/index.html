@@ -13,18 +13,19 @@
         <nav class="sidebar">
             <div class="sidebar-header">
                 <i class="fas fa-cube"></i>
-                <span>Minecraft</span>
+                <span>Minecraft Bot</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="#overview" class="nav-link active" data-section="overview"><i class="fas fa-chart-line"></i> Overview</a></li>
                 <li><a href="#instances" class="nav-link" data-section="instances"><i class="fas fa-robot"></i> Instances</a></li>
+                <li><a href="#first-person" class="nav-link" data-section="first-person"><i class="fas fa-eye"></i> Bot View</a></li>
                 <li><a href="#trading" class="nav-link" data-section="trading"><i class="fas fa-coins"></i> Trading</a></li>
                 <li><a href="#enchanting" class="nav-link" data-section="enchanting"><i class="fas fa-wand-magic-sparkles"></i> Enchanting</a></li>
                 <li><a href="#brewing" class="nav-link" data-section="brewing"><i class="fas fa-flask"></i> Brewing</a></li>
                 <li><a href="#fishing" class="nav-link" data-section="fishing"><i class="fas fa-fish"></i> Fishing</a></li>
                 <li><a href="#mobfarm" class="nav-link" data-section="mobfarm"><i class="fas fa-skull"></i> Mob Farm</a></li>
+                <li><a href="#building" class="nav-link" data-section="building"><i class="fas fa-hammer"></i> Building</a></li>
                 <li><a href="#pathfinding" class="nav-link" data-section="pathfinding"><i class="fas fa-map"></i> Pathfinding</a></li>
-                <li><a href="#minecraft-view" class="nav-link" data-section="minecraft-view"><i class="fas fa-gamepad"></i> Minecraft View</a></li>
             </ul>
         </nav>
 
@@ -36,12 +37,12 @@
                     <button class="menu-toggle" id="menuToggle">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1>Minecraft Dashboard</h1>
+                    <h1><i class="fas fa-gamepad"></i> Minecraft Bot Dashboard</h1>
                 </div>
                 <div class="header-right">
-                    <div class="domain-input">
-                        <input type="text" id="domainInput" placeholder="Enter custom domain or localhost:3000" value="localhost:3000">
-                        <button id="domainBtn"><i class="fas fa-check"></i></button>
+                    <div class="status-indicator">
+                        <span class="status-dot online"></span>
+                        <span class="status-text">Online</span>
                     </div>
                     <div class="user-profile">
                         <div class="profile-avatar">PL</div>
@@ -57,52 +58,105 @@
                     <p>Real-time monitoring of all bot systems</p>
                 </div>
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon trading"><i class="fas fa-coins"></i></div>
+                    <div class="stat-card gradient-1">
+                        <div class="stat-icon"><i class="fas fa-coins"></i></div>
                         <div class="stat-content">
                             <h3>Trading Profit</h3>
                             <p class="stat-value">15,420</p>
                             <p class="stat-subtext">+6,000/hour</p>
                         </div>
+                        <div class="stat-bar" style="width: 75%"></div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon enchanting"><i class="fas fa-wand-magic-sparkles"></i></div>
+                    <div class="stat-card gradient-2">
+                        <div class="stat-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
                         <div class="stat-content">
                             <h3>Enchanting Jobs</h3>
                             <p class="stat-value">45</p>
                             <p class="stat-subtext">18/hour completed</p>
                         </div>
+                        <div class="stat-bar" style="width: 60%"></div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon brewing"><i class="fas fa-flask"></i></div>
+                    <div class="stat-card gradient-3">
+                        <div class="stat-icon"><i class="fas fa-flask"></i></div>
                         <div class="stat-content">
                             <h3>Brewing Batches</h3>
                             <p class="stat-value">23</p>
                             <p class="stat-subtext">18/hour</p>
                         </div>
+                        <div class="stat-bar" style="width: 50%"></div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon fishing"><i class="fas fa-fish"></i></div>
+                    <div class="stat-card gradient-4">
+                        <div class="stat-icon"><i class="fas fa-fish"></i></div>
                         <div class="stat-content">
                             <h3>Fish Caught</h3>
                             <p class="stat-value">156</p>
                             <p class="stat-subtext">8,420 coins</p>
                         </div>
+                        <div class="stat-bar" style="width: 65%"></div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon mobfarm"><i class="fas fa-skull"></i></div>
+                    <div class="stat-card gradient-5">
+                        <div class="stat-icon"><i class="fas fa-skull"></i></div>
                         <div class="stat-content">
                             <h3>Mobs Killed</h3>
                             <p class="stat-value">432</p>
                             <p class="stat-subtext">5,840 XP</p>
                         </div>
+                        <div class="stat-bar" style="width: 72%"></div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon instances"><i class="fas fa-robot"></i></div>
+                    <div class="stat-card gradient-6">
+                        <div class="stat-icon"><i class="fas fa-robot"></i></div>
                         <div class="stat-content">
                             <h3>Active Instances</h3>
                             <p class="stat-value">3/10</p>
                             <p class="stat-subtext">All online</p>
+                        </div>
+                        <div class="stat-bar" style="width: 30%"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- First-Person View Section -->
+            <section id="first-person" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-eye"></i> Bot First-Person View</h2>
+                    <p>Real-time first-person perspective from the bot's eyes</p>
+                </div>
+                <div class="fps-container">
+                    <div class="fps-view" id="fpsView">
+                        <canvas id="fpsCanvas" width="1200" height="600"></canvas>
+                        <div class="fps-hud">
+                            <div class="crosshair"></div>
+                            <div class="hud-info">
+                                <div class="info-item"><strong>Server:</strong> play.minecraft.com</div>
+                                <div class="info-item"><strong>Player:</strong> BravePlayer2024</div>
+                                <div class="info-item"><strong>Health:</strong> <span class="health">❤️❤️❤️❤️❤️ 10/10</span></div>
+                                <div class="info-item"><strong>Hunger:</strong> <span class="hunger">🍗🍗🍗🍗🍗 10/10</span></div>
+                            </div>
+                            <div class="block-info">
+                                <div class="looking-at">Looking at: <strong>Stone Block</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fps-controls">
+                        <div class="control-group">
+                            <h3>⚙️ Bot Controls</h3>
+                            <div class="control-buttons">
+                                <button class="control-btn" onclick="simulateAction('break')"><i class="fas fa-pickaxe"></i> Break Block</button>
+                                <button class="control-btn" onclick="simulateAction('place')"><i class="fas fa-cube"></i> Place Block</button>
+                                <button class="control-btn" onclick="simulateAction('jump')"><i class="fas fa-arrow-up"></i> Jump</button>
+                                <button class="control-btn" onclick="simulateAction('interact')"><i class="fas fa-hand-fist"></i> Interact</button>
+                                <button class="control-btn" onclick="simulateAction('attack')"><i class="fas fa-sword"></i> Attack</button>
+                                <button class="control-btn" onclick="simulateAction('walk')"><i class="fas fa-person-walking"></i> Walk Forward</button>
+                            </div>
+                        </div>
+                        <div class="action-log">
+                            <h3>📋 Recent Actions</h3>
+                            <div id="actionLog" class="log-content">
+                                <div class="log-entry"><span class="time">12:45:30</span> Placed 5 stone blocks</div>
+                                <div class="log-entry"><span class="time">12:45:25</span> Broke stone block</div>
+                                <div class="log-entry"><span class="time">12:45:20</span> Jumped successfully</div>
+                                <div class="log-entry"><span class="time">12:45:15</span> Opened chest</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -112,7 +166,7 @@
             <section id="instances" class="section">
                 <div class="section-header">
                     <h2><i class="fas fa-robot"></i> Bot Instances</h2>
-                    <p>Manage and monitor your bot instances</p>
+                    <p>Manage and monitor your active bot instances</p>
                 </div>
                 <div class="instances-container" id="instancesContainer">
                     <!-- Will be populated by JavaScript -->
@@ -126,9 +180,6 @@
                     <p>Real-time trading statistics and performance</p>
                 </div>
                 <div class="system-card-large">
-                    <div class="system-chart">
-                        <div class="chart-placeholder">📈 Trading Chart</div>
-                    </div>
                     <div class="system-stats">
                         <div class="stat-item">
                             <span>Status</span>
@@ -143,12 +194,8 @@
                             <strong>234</strong>
                         </div>
                         <div class="stat-item">
-                            <span>Duration</span>
-                            <strong>2h 34m</strong>
-                        </div>
-                        <div class="stat-item">
                             <span>Profit/Hour</span>
-                            <strong style="color: #4ade80;">+6,000 coins</strong>
+                            <strong class="profit">+6,000 coins</strong>
                         </div>
                     </div>
                 </div>
@@ -158,17 +205,9 @@
             <section id="enchanting" class="section">
                 <div class="section-header">
                     <h2><i class="fas fa-wand-magic-sparkles"></i> Enchanting System</h2>
-                    <p>Automated item enchanting automation</p>
+                    <p>Automated item enchanting</p>
                 </div>
                 <div class="system-card-large">
-                    <div class="job-queue">
-                        <h3>Job Queue</h3>
-                        <div class="queue-items">
-                            <div class="queue-item">Sharpness V - Sword</div>
-                            <div class="queue-item">Efficiency III - Pickaxe</div>
-                            <div class="queue-item">Unbreaking II - Axe</div>
-                        </div>
-                    </div>
                     <div class="system-stats">
                         <div class="stat-item">
                             <span>Jobs Completed</span>
@@ -197,23 +236,6 @@
                     <p>Automated potion brewing</p>
                 </div>
                 <div class="system-card-large">
-                    <div class="potion-grid">
-                        <div class="potion-item">
-                            <div class="potion-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a6f);"></div>
-                            <p>Strength</p>
-                            <small>12 batches</small>
-                        </div>
-                        <div class="potion-item">
-                            <div class="potion-icon" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);"></div>
-                            <p>Speed</p>
-                            <small>8 batches</small>
-                        </div>
-                        <div class="potion-item">
-                            <div class="potion-icon" style="background: linear-gradient(135deg, #ffa502, #ffb31a);"></div>
-                            <p>Healing</p>
-                            <small>3 batches</small>
-                        </div>
-                    </div>
                     <div class="system-stats">
                         <div class="stat-item">
                             <span>Batches Completed</span>
@@ -242,24 +264,6 @@
                     <p>Automated fishing with rarity tracking</p>
                 </div>
                 <div class="system-card-large">
-                    <div class="rarity-chart">
-                        <div class="rarity-item">
-                            <div class="rarity-bar legendary"></div>
-                            <p>Legendary: 2</p>
-                        </div>
-                        <div class="rarity-item">
-                            <div class="rarity-bar epic"></div>
-                            <p>Epic: 15</p>
-                        </div>
-                        <div class="rarity-item">
-                            <div class="rarity-bar rare"></div>
-                            <p>Rare: 45</p>
-                        </div>
-                        <div class="rarity-item">
-                            <div class="rarity-bar uncommon"></div>
-                            <p>Uncommon: 94</p>
-                        </div>
-                    </div>
                     <div class="system-stats">
                         <div class="stat-item">
                             <span>Fish Caught</span>
@@ -275,7 +279,7 @@
                         </div>
                         <div class="stat-item">
                             <span>Last Rarity</span>
-                            <strong style="color: #ff00ff;">RARE</strong>
+                            <strong class="rare">RARE</strong>
                         </div>
                     </div>
                 </div>
@@ -288,28 +292,6 @@
                     <p>Automated mob farming and drops</p>
                 </div>
                 <div class="system-card-large">
-                    <div class="mob-stats-grid">
-                        <div class="mob-card">
-                            <h4>Zombies</h4>
-                            <p class="mob-count">145</p>
-                            <p class="mob-drop">Rotten Flesh: 89</p>
-                        </div>
-                        <div class="mob-card">
-                            <h4>Skeletons</h4>
-                            <p class="mob-count">98</p>
-                            <p class="mob-drop">Bones: 67</p>
-                        </div>
-                        <div class="mob-card">
-                            <h4>Creepers</h4>
-                            <p class="mob-count">78</p>
-                            <p class="mob-drop">Gunpowder: 45</p>
-                        </div>
-                        <div class="mob-card">
-                            <h4>Endermen</h4>
-                            <p class="mob-count">34</p>
-                            <p class="mob-drop">Ender Pearl: 34</p>
-                        </div>
-                    </div>
                     <div class="system-stats">
                         <div class="stat-item">
                             <span>Mobs Killed</span>
@@ -331,6 +313,34 @@
                 </div>
             </section>
 
+            <!-- Building Section -->
+            <section id="building" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-hammer"></i> Building System</h2>
+                    <p>Automated block placement and building</p>
+                </div>
+                <div class="system-card-large">
+                    <div class="system-stats">
+                        <div class="stat-item">
+                            <span>Blocks Placed</span>
+                            <strong>1,245</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Completed Jobs</span>
+                            <strong>12/15</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Blocks/Hour</span>
+                            <strong>450</strong>
+                        </div>
+                        <div class="stat-item">
+                            <span>Current Job</span>
+                            <strong>Stone Tower</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Pathfinding Section -->
             <section id="pathfinding" class="section">
                 <div class="section-header">
@@ -338,26 +348,6 @@
                     <p>Advanced waypoint navigation</p>
                 </div>
                 <div class="system-card-large">
-                    <div class="waypoint-map">
-                        <svg viewBox="0 0 400 300" class="map-svg">
-                            <!-- Grid background -->
-                            <defs>
-                                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
-                                </pattern>
-                            </defs>
-                            <rect width="400" height="300" fill="url(#grid)" />
-                            <!-- Waypoints -->
-                            <circle cx="100" cy="80" r="8" fill="#4ade80" />
-                            <circle cx="200" cy="150" r="8" fill="#60a5fa" />
-                            <circle cx="300" cy="200" r="8" fill="#fbbf24" />
-                            <!-- Current position -->
-                            <circle cx="100" cy="80" r="15" fill="none" stroke="#4ade80" stroke-width="2" opacity="0.5" />
-                            <!-- Path lines -->
-                            <line x1="100" y1="80" x2="200" y2="150" stroke="#4ade80" stroke-width="2" stroke-dasharray="5,5" />
-                            <line x1="200" y1="150" x2="300" y2="200" stroke="#60a5fa" stroke-width="2" stroke-dasharray="5,5" />
-                        </svg>
-                    </div>
                     <div class="system-stats">
                         <div class="stat-item">
                             <span>Total Distance</span>
@@ -373,68 +363,9 @@
                         </div>
                         <div class="stat-item">
                             <span>Destination</span>
-                            <strong>None</strong>
+                            <strong>Home Base</strong>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            <!-- Minecraft View Section -->
-            <section id="minecraft-view" class="section">
-                <div class="section-header">
-                    <h2><i class="fas fa-gamepad"></i> Minecraft Bot View</h2>
-                    <p>Real-time view from bot perspective</p>
-                </div>
-                <div class="minecraft-container">
-                    <div class="minecraft-view" id="minecraftView">
-                        <div class="minecraft-hud">
-                            <div class="hud-top">
-                                <div class="server-info">
-                                    <h3>Server: play.minecraft.com</h3>
-                                    <p>Player: BravePlayer2024 | Ping: 45ms</p>
-                                </div>
-                                <div class="coordinates">
-                                    <p>X: 342 | Y: 64 | Z: -521</p>
-                                    <p>Biome: Plains</p>
-                                </div>
-                            </div>
-                            <div class="hud-center">
-                                <div class="crosshair"></div>
-                            </div>
-                            <div class="hud-bottom">
-                                <div class="hotbar">
-                                    <div class="hotbar-slot active"><img src="https://via.placeholder.com/20" alt="Pickaxe"></div>
-                                    <div class="hotbar-slot"><img src="https://via.placeholder.com/20" alt="Sword"></div>
-                                    <div class="hotbar-slot"><img src="https://via.placeholder.com/20" alt="Shovel"></div>
-                                    <div class="hotbar-slot"><img src="https://via.placeholder.com/20" alt="Axe"></div>
-                                    <div class="hotbar-slot"><img src="https://via.placeholder.com/20" alt="Hoe"></div>
-                                    <div class="hotbar-slot"><img src="https://via.placeholder.com/20" alt="Torch"></div>
-                                    <div class="hotbar-slot"><img src="https://via.placeholder.com/20" alt="Block"></div>
-                                    <div class="hotbar-slot"><img src="https://via.placeholder.com/20" alt="Food"></div>
-                                    <div class="hotbar-slot"><img src="https://via.placeholder.com/20" alt="Ender Pearl"></div>
-                                </div>
-                                <div class="health-hunger">
-                                    <div class="health-bar">
-                                        <div class="health-fill" style="width: 90%;"></div>
-                                    </div>
-                                    <div class="hunger-bar">
-                                        <div class="hunger-fill" style="width: 85%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <canvas id="minecraftCanvas" width="800" height="600"></canvas>
-                    </div>
-                </div>
-                <div class="bot-controls">
-                    <button class="control-btn"><i class="fas fa-arrow-up"></i> Forward</button>
-                    <button class="control-btn"><i class="fas fa-arrow-down"></i> Backward</button>
-                    <button class="control-btn"><i class="fas fa-arrow-left"></i> Left</button>
-                    <button class="control-btn"><i class="fas fa-arrow-right"></i> Right</button>
-                    <button class="control-btn"><i class="fas fa-jump"></i> Jump</button>
-                    <button class="control-btn"><i class="fas fa-fist-raised"></i> Attack</button>
-                    <button class="control-btn"><i class="fas fa-hand-fist"></i> Place Block</button>
-                    <button class="control-btn"><i class="fas fa-pause"></i> Pause</button>
                 </div>
             </section>
         </main>

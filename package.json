@@ -1,17 +1,29 @@
 {
-  "name": "mineflare-discord-bot",
-  "version": "2.0.0",
-  "description": "Discord bot for Mineflare server management and bot control - Made by NeoNinja_",
+  "name": "minecraft-discord-bot",
+  "version": "3.0.0",
+  "description": "Advanced Discord bot for Minecraft server management with automation systems and real-time monitoring",
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "build": "tsc",
-    "deploy-commands": "ts-node src/deploy-commands.ts"
+    "deploy-commands": "ts-node src/deploy-commands.ts",
+    "test": "echo \"No tests configured yet\"",
+    "lint": "echo \"Linting disabled\""
   },
-  "keywords": ["discord", "mineflare", "minecraft", "bot"],
+  "keywords": [
+    "discord",
+    "minecraft",
+    "bot",
+    "automation",
+    "server-management"
+  ],
   "author": "NeoNinja_",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hypixelpl/mineflare-discord-bot.git"
+  },
   "dependencies": {
     "discord.js": "^14.14.0",
     "@discordjs/rest": "^2.0.1",
@@ -22,5 +34,9 @@
     "@types/node": "^20.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   }
 }
