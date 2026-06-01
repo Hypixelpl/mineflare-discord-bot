@@ -30,10 +30,8 @@ export class AutoMiningSystem {
       session.status = 'active';
     }
 
-    // Clear any existing interval
     if (session.interval) clearInterval(session.interval);
 
-    // Simulate mining with random intervals
     session.interval = setInterval(() => {
       const currentSession = this.sessions.get(sessionId);
       if (!currentSession || currentSession.status !== 'active') {

@@ -427,7 +427,7 @@ client.on('interactionCreate', async (interaction) => {
                 value: `👤 Username: \`${bot.username}\`\n🎮 Server: \`${bot.serverAddress}\`\n☕ Java: \`${bot.javaVersion}\`\n📊 Status: \`${bot.status}\``,
                 inline: true
               }))
-            : [{ name: 'No Active Bots', value: 'Use `/join` to start', inline: false }]
+            : [{ name: 'No Active Bots', value: 'Use \`/join\` to start', inline: false }]
         )
         .setColor('#00FF00')
         .setFooter({ text: '🤖 Made by NeoNinja_ | Mineflare Discord Bot' })
