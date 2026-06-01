@@ -1,4 +1,4 @@
-# 📦 Complete Installation Guide for Minecraft Discord Bot
+# 📚 Complete Installation Guide for Minecraft Discord Bot
 
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
@@ -201,7 +201,7 @@ npm start
 
 ### Running the Web Dashboard
 
-The dashboard is a simple static website. You can serve it using:
+The dashboard is a modern responsive website with real-time bot monitoring. You can serve it using:
 
 #### Option 1: Using Python (Recommended for Testing)
 ```bash
@@ -228,6 +228,12 @@ http-server web -p 3000
 2. Right-click `web/index.html`
 3. Select "Open with Live Server"
 
+#### Option 4: Using Node.js Built-in Server
+```bash
+# Create simple server (optional)
+node -e "require('http').createServer((req, res) => { require('fs').readFile('./web' + (req.url === '/' ? '/index.html' : req.url), (err, data) => { if(err) res.writeHead(404); else res.writeHead(200); res.end(data); }); }).listen(3000); console.log('Server running on http://localhost:3000');"
+```
+
 ### Accessing the Dashboard
 
 Open your browser and navigate to:
@@ -235,48 +241,17 @@ Open your browser and navigate to:
 http://localhost:3000
 ```
 
----
+### Dashboard Features
 
-## Troubleshooting
-
-### Bot Won't Start
-
-**Error**: `DISCORD_TOKEN not set in .env file`
-- **Solution**: Verify your `.env` file exists and has the correct token
-
-**Error**: `Cannot find module 'discord.js'`
-- **Solution**: Run `npm install` again
-- **Check**: Verify `node_modules/` folder exists
-
-### Commands Not Appearing
-
-**Problem**: Slash commands don't show in Discord
-- **Solution 1**: Run `npm run deploy-commands`
-- **Solution 2**: Restart Discord completely
-- **Solution 3**: Check bot has "applications.commands" scope
-
-### Permission Errors
-
-**Error**: `Bot missing permissions`
-- **Solution**: Re-invite bot with correct scopes:
-  1. Go to OAuth2 → URL Generator
-  2. Select `bot` and `applications.commands` scopes
-  3. Select all permissions needed
-  4. Copy and visit the generated URL
-
-### Dashboard Not Loading
-
-**Problem**: Dashboard shows blank page
-- **Solution 1**: Check console for JavaScript errors (F12)
-- **Solution 2**: Verify correct port (3000)
-- **Solution 3**: Clear browser cache (Ctrl+Shift+Del)
-
-### Java Version Issues
-
-**Error**: `Java version not detected`
-- **Solution 1**: Ensure Java is installed: `java -version`
-- **Solution 2**: Add Java to system PATH
-- **Solution 3**: Set Java path in environment variables
+✨ **Modern UI with:**
+- Real-time bot statistics
+- Beautiful gradient cards
+- First-person bot view with FPS perspective
+- Interactive block breaking/placing system
+- Action logging
+- Responsive design
+- Animated elements
+- System monitoring (Trading, Enchanting, Brewing, etc.)
 
 ---
 
@@ -309,12 +284,15 @@ http://localhost:3000
    ```
    - Should show your statistics
 
+5. **Instances Command**
+   ```
+   /instances
+   ```
+   - Should list active bots
+
 ### Testing Systems
 
 ```bash
-# Run tests (if available)
-npm test
-
 # Check TypeScript compilation
 npm run build
 
@@ -325,17 +303,89 @@ npm run build
 
 1. Navigate to `http://localhost:3000`
 2. Check all sections load correctly:
-   - Overview
-   - Instances
-   - Trading
-   - Enchanting
-   - Brewing
-   - Fishing
-   - Mob Farm
-   - Pathfinding
-   - Minecraft View
-3. Test interactive features
-4. Verify responsive design on mobile
+   - ✅ Overview (with stats cards)
+   - ✅ Bot View (FPS perspective)
+   - ✅ Instances (active bots)
+   - ✅ Trading System
+   - ✅ Enchanting System
+   - ✅ Brewing System
+   - ✅ Fishing System
+   - ✅ Mob Farm System
+   - ✅ Building System
+   - ✅ Pathfinding System
+3. Test interactive controls:
+   - Click "Break Block" button
+   - Click "Place Block" button
+   - Click "Jump" button
+   - Click other control buttons
+4. Verify responsive design on mobile (F12 → Toggle device toolbar)
+5. Check console for errors (F12 → Console)
+
+---
+
+## Troubleshooting
+
+### Bot Won't Start
+
+**Error**: `DISCORD_TOKEN not set in .env file`
+- **Solution**: Verify your `.env` file exists and has the correct token
+
+**Error**: `Cannot find module 'discord.js'`
+- **Solution**: Run `npm install` again
+- **Check**: Verify `node_modules/` folder exists
+
+### Commands Not Appearing
+
+**Problem**: Slash commands don't show in Discord
+- **Solution 1**: Run `npm run deploy-commands`
+- **Solution 2**: Restart Discord completely
+- **Solution 3**: Check bot has "applications.commands" scope
+- **Solution 4**: Verify GUILD_ID is correct in .env
+
+### Permission Errors
+
+**Error**: `Bot missing permissions`
+- **Solution**: Re-invite bot with correct scopes:
+  1. Go to OAuth2 → URL Generator
+  2. Select `bot` and `applications.commands` scopes
+  3. Select all permissions needed
+  4. Copy and visit the generated URL
+
+### Dashboard Not Loading
+
+**Problem**: Dashboard shows blank page
+- **Solution 1**: Check console for JavaScript errors (F12)
+- **Solution 2**: Verify correct port (3000)
+- **Solution 3**: Clear browser cache (Ctrl+Shift+Del)
+- **Solution 4**: Check server is running on correct port
+- **Solution 5**: Try different browser
+
+### FPS Canvas Not Rendering
+
+**Problem**: Canvas shows nothing or is blank
+- **Solution 1**: Check browser console (F12) for errors
+- **Solution 2**: Verify JavaScript is enabled
+- **Solution 3**: Try different browser (Chrome/Firefox recommended)
+- **Solution 4**: Clear browser cache
+
+### Java Version Issues
+
+**Error**: `Java version not detected`
+- **Solution 1**: Ensure Java is installed: `java -version`
+- **Solution 2**: Add Java to system PATH
+- **Solution 3**: Set Java path in environment variables
+- **Solution 4**: Download Java from java.com
+
+### Port Already in Use
+
+**Error**: `Address already in use :::3000`
+- **Solution 1**: Change port number:
+  ```bash
+  python -m http.server 8080  # Use port 8080 instead
+  ```
+- **Solution 2**: Kill process using port 3000
+  - Windows: `netstat -ano | findstr :3000`
+  - Mac/Linux: `lsof -i :3000 | kill -9`
 
 ---
 
@@ -353,15 +403,25 @@ CLIENT_ID=your_client_id
 DASHBOARD_PORT=3000
 API_PORT=5000
 LOG_LEVEL=info
+DEBUG_MODE=false
 ```
 
 ### Customizing Bot Behavior
 
 Edit system files in `src/systems/` to customize:
-- Drop rates in MobFarmSystem.ts
-- Potion types in BrewingSystem.ts
-- Fish types in FishingSystem.ts
-- Mining speeds in AutoMiningSystem.ts
+- Drop rates in `MobFarmSystem.ts`
+- Potion types in `BrewingSystem.ts`
+- Fish types in `FishingSystem.ts`
+- Mining speeds in `AutoMiningSystem.ts`
+- Building patterns in `BlockBuildingSystem.ts`
+
+### Command Customization
+
+Edit `commands.json` to:
+- Add new commands
+- Modify descriptions
+- Change command options
+- Update choices for options
 
 ---
 
@@ -375,6 +435,55 @@ Edit system files in `src/systems/` to customize:
 
 ---
 
+## Performance Tips
+
+### For Better Bot Performance
+
+```bash
+# Use production build
+npm run build
+npm start
+
+# Monitor memory usage
+node --max-old-space-size=4096 dist/index.js
+```
+
+### For Better Dashboard Performance
+
+- Use a proper web server (Nginx, Apache)
+- Enable gzip compression
+- Use CDN for static files
+- Implement caching
+
+---
+
+## Deployment
+
+### Hosting Options
+
+1. **Local Machine** - Development/Testing
+2. **VPS** (DigitalOcean, Linode) - Production
+3. **Cloud** (AWS, Google Cloud) - Enterprise
+4. **Heroku** - Easy deployment
+
+### Docker Deployment
+
+```dockerfile
+FROM node:18
+WORKDIR /app
+COPY . .
+RUN npm install
+RUN npm run build
+CMD ["npm", "start"]
+```
+
+```bash
+docker build -t minecraft-bot .
+docker run -e DISCORD_TOKEN=your_token minecraft-bot
+```
+
+---
+
 ## Support & Issues
 
 - **Issues**: https://github.com/Hypixelpl/mineflare-discord-bot/issues
@@ -383,4 +492,25 @@ Edit system files in `src/systems/` to customize:
 
 ---
 
+## FAQ
+
+**Q: Can I run multiple bot instances?**
+A: Yes! The bot supports unlimited instances. Use the `/join` command multiple times with different usernames.
+
+**Q: How do I update the bot?**
+A: Run `git pull` to get latest changes, then `npm install` and `npm run build`.
+
+**Q: Can I customize commands?**
+A: Yes! Edit `commands.json` and run `npm run deploy-commands`.
+
+**Q: Is the dashboard real-time?**
+A: The current version shows mock data. Connect it to your bot's WebSocket for real-time data.
+
+**Q: How often are systems updated?**
+A: Check each system's `updateInterval` in the code (default: 5-30 seconds).
+
+---
+
 **Made with ❤️ by NeoNinja_**
+
+**Last Updated**: 2026-06-01

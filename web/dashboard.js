@@ -7,9 +7,9 @@ const config = {
 // Mock data
 const mockData = {
     instances: [
-        { id: '1', username: 'BravePlayer2024', server: 'play.mineflare.com', status: 'online', java: '17', ping: 45 },
-        { id: '2', username: 'SwiftMiner1023', server: 'hub.mineflare.com', status: 'online', java: '21', ping: 32 },
-        { id: '3', username: 'NobleFighter5420', server: 'pvp.mineflare.com', status: 'offline', java: '17', ping: 0 }
+        { id: '1', username: 'BravePlayer2024', server: 'play.minecraft.com', status: 'online', java: '17', ping: 45 },
+        { id: '2', username: 'SwiftMiner1023', server: 'hub.minecraft.com', status: 'online', java: '21', ping: 32 },
+        { id: '3', username: 'NobleFighter5420', server: 'pvp.minecraft.com', status: 'offline', java: '17', ping: 0 }
     ]
 };
 
@@ -19,8 +19,6 @@ const menuToggle = document.getElementById('menuToggle');
 const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('.section');
 const contentScroll = document.querySelector('.main-content');
-const domainInput = document.getElementById('domainInput');
-const domainBtn = document.getElementById('domainBtn');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,10 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function init() {
     setupEventListeners();
-    setupScrollableArea();
     updateInstances();
-    updateMinecraftView();
-    setInterval(updateMinecraftView, 100);
+    renderFPSCanvas();
+    animateFPS();
 }
 
 // Event Listeners
@@ -53,36 +50,6 @@ function setupEventListeners() {
             }
         });
     });
-
-    // Domain settings
-    domainBtn.addEventListener('click', () => {
-        config.domain = domainInput.value || 'localhost:3000';
-        localStorage.setItem('domain', config.domain);
-        showNotification('Domain updated to: ' + config.domain);
-    });
-
-    domainInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            domainBtn.click();
-        }
-    });
-}
-
-function setupScrollableArea() {
-    const mainContent = document.querySelector('.main-content');
-    const header = document.querySelector('.header');
-    const scrollableHeight = window.innerHeight - header.offsetHeight;
-    
-    const contentWrapper = document.createElement('div');
-    contentWrapper.className = 'content-scroll';
-    contentWrapper.style.height = scrollableHeight + 'px';
-    
-    const allSections = document.querySelectorAll('.section');
-    allSections.forEach(section => {
-        contentWrapper.appendChild(section);
-    });
-    
-    mainContent.appendChild(contentWrapper);
 }
 
 // Navigation
@@ -103,6 +70,11 @@ function navigateTo(sectionId) {
             section.scrollIntoView();
         }
     });
+
+    // Re-render FPS canvas when navigating to first-person view
+    if (sectionId === 'first-person') {
+        setTimeout(renderFPSCanvas, 100);
+    }
 }
 
 // Update Functions
@@ -128,12 +100,14 @@ function updateInstances() {
     container.innerHTML = html;
 }
 
-// Minecraft Canvas Rendering
-function updateMinecraftView() {
-    const canvas = document.getElementById('minecraftCanvas');
+// FPS Canvas Rendering
+function renderFPSCanvas() {
+    const canvas = document.getElementById('fpsCanvas');
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
     const width = canvas.width;
     const height = canvas.height;
 
@@ -160,6 +134,12 @@ function updateMinecraftView() {
     // Clouds
     drawCloud(ctx, 100, 50);
     drawCloud(ctx, width - 150, 80);
+    
+    // Sun
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.arc(width - 100, 50, 30, 0, Math.PI * 2);
+    ctx.fill();
 }
 
 function drawTree(ctx, x, y, trunkWidth, trunkHeight) {
@@ -187,7 +167,46 @@ function drawCloud(ctx, x, y) {
     ctx.fill();
 }
 
-// Notification
+// Animate FPS
+function animateFPS() {
+    setInterval(() => {
+        renderFPSCanvas();
+    }, 2000);
+}
+
+// Action Simulation
+function simulateAction(action) {
+    const logContainer = document.getElementById('actionLog');
+    if (!logContainer) return;
+
+    const timestamp = new Date().toLocaleTimeString();
+    const actionMessages = {
+        'break': 'Broke stone block',
+        'place': 'Placed 5 stone blocks',
+        'jump': 'Jumped successfully',
+        'interact': 'Opened chest',
+        'attack': 'Attacked mob',
+        'walk': 'Walking forward'
+    };
+
+    const message = actionMessages[action] || 'Performed action';
+    
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    entry.innerHTML = `<span class="time">${timestamp}</span> ${message}`;
+    
+    logContainer.insertBefore(entry, logContainer.firstChild);
+    
+    // Keep only last 10 entries
+    while (logContainer.children.length > 10) {
+        logContainer.removeChild(logContainer.lastChild);
+    }
+    
+    // Show notification
+    showNotification(`✅ ${message}`);
+}
+
+// Notification System
 function showNotification(message) {
     const notification = document.createElement('div');
     notification.style.cssText = `
@@ -200,6 +219,7 @@ function showNotification(message) {
         border-radius: 8px;
         z-index: 2000;
         animation: slideIn 0.3s ease;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     `;
     notification.textContent = message;
     document.body.appendChild(notification);
