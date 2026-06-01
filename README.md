@@ -1,130 +1,184 @@
 # Mineflare Discord Bot
 
-A powerful Discord bot for managing Mineflare Minecraft servers with bot account support.
+A powerful Discord bot for managing Mineflare Minecraft servers with advanced automation systems.
 
-## Features
+## 🎯 Features
 
-✅ **Server Status Monitoring** - Real-time status checks for Mineflare servers
-✅ **Multi-Java Support** - Works with Java 1.8, 11, 16, 17, and 21
-✅ **Offline Account Support** - Auto-generate random usernames or use custom names
-✅ **Premium & Cracked Support** - Choose between premium and cracked accounts
-✅ **Bot Commands** - Mine, combat, place blocks, and more
-✅ **Customizable Join Messages** - Add custom messages when joining servers
-✅ **Session Management** - Track and manage multiple bot sessions
+### Core Features
+✅ **Server Status Monitoring** - Real-time status checks  
+✅ **Multi-Java Support** - Java 1.8, 11, 16, 17, 21  
+✅ **Offline Account Support** - Auto-generate or custom usernames  
+✅ **Premium & Cracked Support** - Choose account type  
+✅ **Custom Join Messages** - Personalized join notifications  
+✅ **Multi-Instance Support** - Run up to 10 bot instances simultaneously  
 
-## Installation
+### Advanced Automation Systems
+
+#### 💰 Trading System
+- Automated trading with merchants
+- Profit tracking and statistics
+- Real-time profit monitoring
+- Trade history logging
+
+#### ✨ Enchanting System
+- Automatic item enchanting
+- Job queue management
+- Cost tracking
+- Batch processing
+
+#### 🧪 Brewing System
+- Automated potion brewing
+- Batch management
+- Ingredient tracking
+- Production statistics
+
+#### 🎣 Fishing System
+- Automated fishing with different catch rarities
+- Value tracking for caught fish
+- Rarity distribution
+- Profit calculations
+
+#### 💀 Mob Farm System
+- Automated mob farming
+- XP farming and tracking
+- Drop collection
+- Efficiency monitoring
+
+#### 🗺️ Pathfinding System
+- Advanced waypoint-based navigation
+- Multi-destination routing
+- Distance tracking
+- Coordinate management
+
+### Web Dashboard
+- Real-time system monitoring
+- Instance overview
+- Live statistics
+- Beautiful responsive UI
+
+## 📦 Installation
 
 ### Prerequisites
-- Node.js 16.0.0 or higher
+- Node.js 16.0.0+
 - Discord Bot Token
-- Java installed (any supported version)
+- Java (any supported version)
 
 ### Setup
 
-1. **Clone the repository**
 ```bash
+# Clone repository
 git clone https://github.com/Hypixelpl/mineflare-discord-bot.git
 cd mineflare-discord-bot
-```
 
-2. **Install dependencies**
-```bash
+# Install dependencies
 npm install
-```
 
-3. **Configure environment**
-```bash
+# Configure environment
 cp .env.example .env
-# Edit .env with your Discord bot credentials
-```
+# Edit .env with your credentials
 
-4. **Build the project**
-```bash
+# Build TypeScript
 npm run build
-```
 
-5. **Deploy commands**
-```bash
+# Deploy commands
 npm run deploy-commands
-```
 
-6. **Start the bot**
-```bash
+# Start bot
 npm start
 ```
 
-## Commands
+## 🎮 Commands
 
-### `/status [server]`
-Check the status of a Mineflare server
-- `server`: Server address (optional, defaults to play.mineflare.com)
+### Server Management
+- `/status [server]` - Check server status
+- `/join <server> [options]` - Join a server with bot account
+- `/leave` - Disconnect bot
+- `/instances` - View all running instances
 
-### `/join <server> [java-version] [account-mode] [username] [account-type] [message]`
-Join a server with a bot account
-- `server`: Server address (required)
-- `java-version`: Java version to use (optional, defaults to 17)
-- `account-mode`: offline or premium (optional, defaults to offline)
-- `username`: Custom username (optional, auto-generated if offline)
-- `account-type`: cracked or premium (optional, defaults to cracked)
-- `message`: Custom join message (optional)
+### Automation Systems
+- `/trading status` - Trading system status
+- `/enchanting status` - Enchanting system status
+- `/brewing status` - Brewing system status
+- `/fishing status` - Fishing system status
+- `/mobfarm status` - Mob farm system status
+- `/pathfinding addwaypoint <name> <x> <y> <z>` - Add waypoint
+- `/pathfinding status` - Pathfinding status
 
-### `/mine`
-Start mining on the server (requires active bot session)
+## 🌐 Web Dashboard
 
-### `/combat [enemy]`
-Start combat with enemies
-- `enemy`: Type of enemy to fight (optional, defaults to Zombie)
+Access the dashboard at `http://localhost:3000` after starting the bot.
 
-### `/place [block-type]`
-Start placing blocks
-- `block-type`: Type of block to place (optional, defaults to stone)
+The dashboard displays:
+- Active bot instances
+- Trading statistics
+- Enchanting queue
+- Brewing progress
+- Fishing results
+- Mob farm efficiency
+- Waypoint navigation
 
-### `/leave`
-Disconnect the bot from the server
+## 📋 Join Command Options
 
-## Java Version Support
-
-The bot automatically detects installed Java versions on your system. Supported versions:
-- Java 1.8
-- Java 11
-- Java 16
-- Java 17
-- Java 21
-
-## Offline Account Mode
-
-When using offline mode, the bot will:
-1. Auto-generate a random username if not provided
-2. Create a unique session for each join
-3. Support completely offline gameplay
-
-## Configuration
-
-Edit `.env` file with:
-```env
-DISCORD_TOKEN=your_bot_token_here
-GUILD_ID=your_guild_id_here
-CLIENT_ID=your_client_id_here
+```
+/join server:play.mineflare.com
+      java-version:17
+      account-mode:offline
+      username:CustomName
+      account-type:cracked
+      message:"Joining the server!"
 ```
 
-## Troubleshooting
+### Options
+- `server` (required) - Server address
+- `java-version` (optional) - 1.8, 11, 16, 17, 21 (default: 17)
+- `account-mode` (optional) - offline, premium (default: offline)
+- `username` (optional) - Custom name (auto-generated if offline)
+- `account-type` (optional) - cracked, premium (default: cracked)
+- `message` (optional) - Custom join message
+
+## 🔧 Configuration
+
+### Environment Variables
+```env
+DISCORD_TOKEN=your_token_here
+GUILD_ID=your_guild_id
+CLIENT_ID=your_client_id
+```
+
+### Java Version Detection
+The bot automatically detects installed Java versions. If detection fails, it uses:
+- Java 1.8, 11, 16, 17, 21
+
+## 📊 System Metrics
+
+Each automation system tracks:
+- **Time-based metrics** - Duration, uptime
+- **Production metrics** - Items/hour, profit/hour
+- **Resource metrics** - Total cost, total drops
+- **Status indicators** - Active, paused, stopped
+
+## 🐛 Troubleshooting
 
 ### Bot won't start
-- Ensure `DISCORD_TOKEN` is valid in `.env`
-- Check Node.js version: `node -v` (should be 16.0.0+)
+- Verify `DISCORD_TOKEN` in `.env`
+- Check Node.js version: `node -v` (16.0.0+)
+
+### Commands not appearing
+- Run `npm run deploy-commands`
+- Ensure bot has slash command permissions
 
 ### Java version not detected
-- Install Java manually or add to PATH
-- The bot will use default versions if auto-detection fails
+- Install Java or add to PATH
+- Bot uses defaults if detection fails
 
-### Commands not showing
-- Run `npm run deploy-commands` to register commands
-- Give the bot proper permissions in Discord
+### Too many instances
+- Max 10 instances allowed
+- Stop some bots with `/leave`
 
-## License
+## 📝 License
 
 MIT
 
-## Support
+## 🤝 Support
 
-For issues and features, please create an issue on the GitHub repository.
+For issues or features, create an issue on GitHub.

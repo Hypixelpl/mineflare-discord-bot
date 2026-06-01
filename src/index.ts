@@ -1,14 +1,29 @@
-import discord from 'discord.js';
-import { Client, Intents } from 'discord.js';
+import { Client, Intents, EmbedBuilder } from 'discord.js';
 import dotenv from 'dotenv';
 import { exec } from 'child_process';
-import { spawn } from 'child_process';
+
+import { TradingSystem } from './systems/TradingSystem';
+import { EnchantingSystem } from './systems/EnchantingSystem';
+import { BrewingSystem } from './systems/BrewingSystem';
+import { FishingSystem } from './systems/FishingSystem';
+import { MobFarmSystem } from './systems/MobFarmSystem';
+import { PathfindingSystem } from './systems/PathfindingSystem';
+import { MultiInstanceManager } from './systems/MultiInstanceManager';
 
 dotenv.config();
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]
 });
+
+// Initialize all systems
+const tradingSystem = new TradingSystem();
+const enchantingSystem = new EnchantingSystem();
+const brewingSystem = new BrewingSystem();
+const fishingSystem = new FishingSystem();
+const mobFarmSystem = new MobFarmSystem();
+const pathfindingSystem = new PathfindingSystem();
+const instanceManager = new MultiInstanceManager();
 
 // Store active bot sessions
 const activeBots = new Map();
@@ -40,7 +55,7 @@ function generateRandomUsername(): string {
 }
 
 // Get server status from Mineflare
-async function getServerStatus(serverAddress: string): Promise<object> {
+async function getServerStatus(serverAddress: string): Promise<any> {
   return new Promise((resolve) => {
     exec(`ping -c 1 ${serverAddress} 2>&1`, (error, stdout) => {
       const isOnline = !error;
@@ -62,11 +77,12 @@ client.on('interactionCreate', async (interaction) => {
   if (!interaction.isCommand()) return;
 
   try {
+    // STATUS COMMAND
     if (interaction.commandName === 'status') {
       const serverAddress = interaction.options.getString('server') || 'play.mineflare.com';
       const status = await getServerStatus(serverAddress);
       
-      const embed = new discord.EmbedBuilder()
+      const embed = new EmbedBuilder()
         .setTitle('🖥️ Mineflare Server Status')
         .setDescription(`Server: \`${status.address}\``)
         .addFields(
@@ -79,6 +95,7 @@ client.on('interactionCreate', async (interaction) => {
       await interaction.reply({ embeds: [embed] });
     }
 
+    // JOIN COMMAND
     if (interaction.commandName === 'join') {
       const serverAddress = interaction.options.getString('server') || 'localhost';
       const javaVersion = interaction.options.getString('java-version') || '17';
@@ -90,7 +107,16 @@ client.on('interactionCreate', async (interaction) => {
       const userId = interaction.user.id;
       const sessionId = `${userId}-${Date.now()}`;
 
-      const embed = new discord.EmbedBuilder()
+      // Create instance
+      const instance = instanceManager.createInstance(sessionId, username, serverAddress, javaVersion);
+      if (!instance) {
+        return await interaction.reply({
+          content: '❌ Maximum bot instances reached! Please stop some bots first.',
+          ephemeral: true
+        });
+      }
+
+      const embed = new EmbedBuilder()
         .setTitle('⚔️ Joining Mineflare Server')
         .setDescription(joinMessage)
         .addFields(
@@ -105,11 +131,22 @@ client.on('interactionCreate', async (interaction) => {
         .setTimestamp();
 
       const message = await interaction.reply({ embeds: [embed], fetchReply: true });
-      activeBots.set(sessionId, { userId, message, serverAddress, username, javaVersion });
+      activeBots.set(sessionId, {
+        userId,
+        message,
+        serverAddress,
+        username,
+        javaVersion,
+        trading: tradingSystem.startTrading(userId, sessionId),
+        enchanting: enchantingSystem.startEnchanting(userId, sessionId),
+        brewing: brewingSystem.startBrewing(userId, sessionId),
+        fishing: fishingSystem.startFishing(userId, sessionId),
+        mobFarm: mobFarmSystem.startMobFarming(userId, sessionId),
+        pathfinding: pathfindingSystem.startPathfinding(userId, sessionId)
+      });
 
-      // Simulate joining (replace with actual bot logic)
       setTimeout(async () => {
-        const successEmbed = new discord.EmbedBuilder()
+        const successEmbed = new EmbedBuilder()
           .setTitle('✅ Successfully Joined')
           .setDescription(`Bot is now on the server as \`${username}\``)
           .addFields(
@@ -124,77 +161,112 @@ client.on('interactionCreate', async (interaction) => {
       }, 2000);
     }
 
-    if (interaction.commandName === 'mine') {
+    // TRADING COMMANDS
+    if (interaction.commandName === 'trading') {
+      const subcommand = interaction.options.getSubcommand();
       const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
       
       if (!sessionId) {
-        return interaction.reply({
-          content: '❌ No active bot session. Use `/join` first!',
-          ephemeral: true
-        });
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
       }
 
-      const embed = new discord.EmbedBuilder()
-        .setTitle('⛏️ Mining')
-        .setDescription('Bot started mining resources...')
-        .setColor(0x8B4513)
-        .setTimestamp();
+      const session = activeBots.get(sessionId).trading;
+      const embed = tradingSystem.getSessionEmbed(sessionId);
 
       await interaction.reply({ embeds: [embed] });
     }
 
-    if (interaction.commandName === 'combat') {
+    // ENCHANTING COMMANDS
+    if (interaction.commandName === 'enchanting') {
+      const subcommand = interaction.options.getSubcommand();
       const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
       
       if (!sessionId) {
-        return interaction.reply({
-          content: '❌ No active bot session. Use `/join` first!',
-          ephemeral: true
-        });
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
       }
 
-      const enemy = interaction.options.getString('enemy') || 'Zombie';
-      const embed = new discord.EmbedBuilder()
-        .setTitle('⚔️ Combat Started')
-        .setDescription(`Bot is fighting a \`${enemy}\`...`)
-        .setColor(0xFF0000)
-        .setTimestamp();
-
+      const embed = enchantingSystem.getSessionEmbed(sessionId);
       await interaction.reply({ embeds: [embed] });
     }
 
-    if (interaction.commandName === 'place') {
+    // BREWING COMMANDS
+    if (interaction.commandName === 'brewing') {
+      const subcommand = interaction.options.getSubcommand();
       const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
       
       if (!sessionId) {
-        return interaction.reply({
-          content: '❌ No active bot session. Use `/join` first!',
-          ephemeral: true
-        });
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
       }
 
-      const blockType = interaction.options.getString('block-type') || 'stone';
-      const embed = new discord.EmbedBuilder()
-        .setTitle('🧱 Placing Blocks')
-        .setDescription(`Bot is placing \`${blockType}\` blocks...`)
-        .setColor(0x808080)
-        .setTimestamp();
-
+      const embed = brewingSystem.getSessionEmbed(sessionId);
       await interaction.reply({ embeds: [embed] });
     }
 
+    // FISHING COMMANDS
+    if (interaction.commandName === 'fishing') {
+      const subcommand = interaction.options.getSubcommand();
+      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
+      
+      if (!sessionId) {
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
+      }
+
+      const embed = fishingSystem.getSessionEmbed(sessionId);
+      await interaction.reply({ embeds: [embed] });
+    }
+
+    // MOB FARM COMMANDS
+    if (interaction.commandName === 'mobfarm') {
+      const subcommand = interaction.options.getSubcommand();
+      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
+      
+      if (!sessionId) {
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
+      }
+
+      const embed = mobFarmSystem.getSessionEmbed(sessionId);
+      await interaction.reply({ embeds: [embed] });
+    }
+
+    // PATHFINDING COMMANDS
+    if (interaction.commandName === 'pathfinding') {
+      const subcommand = interaction.options.getSubcommand();
+      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
+      
+      if (!sessionId) {
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
+      }
+
+      if (subcommand === 'addwaypoint') {
+        const name = interaction.options.getString('name') || 'Waypoint';
+        const x = interaction.options.getNumber('x') || 0;
+        const y = interaction.options.getNumber('y') || 64;
+        const z = interaction.options.getNumber('z') || 0;
+
+        pathfindingSystem.addWaypoint(sessionId, { name, x, y, z });
+        const embed = pathfindingSystem.getSessionEmbed(sessionId);
+        await interaction.reply({ embeds: [embed] });
+      }
+    }
+
+    // INSTANCES COMMAND
+    if (interaction.commandName === 'instances') {
+      const embed = instanceManager.getInstancesEmbed();
+      await interaction.reply({ embeds: [embed] });
+    }
+
+    // LEAVE COMMAND
     if (interaction.commandName === 'leave') {
       const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
       
       if (!sessionId) {
-        return interaction.reply({
-          content: '❌ No active bot session!',
-          ephemeral: true
-        });
+        return interaction.reply({ content: '❌ No active bot session!', ephemeral: true });
       }
 
+      instanceManager.removeInstance(sessionId);
       activeBots.delete(sessionId);
-      const embed = new discord.EmbedBuilder()
+      
+      const embed = new EmbedBuilder()
         .setTitle('👋 Left Server')
         .setDescription('Bot has disconnected from the server.')
         .setColor(0xFF6347)
