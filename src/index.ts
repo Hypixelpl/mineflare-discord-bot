@@ -11,11 +11,6 @@ import { MobFarmSystem } from './systems/MobFarmSystem';
 import { PathfindingSystem } from './systems/PathfindingSystem';
 import { MultiInstanceManager } from './systems/MultiInstanceManager';
 import { MinecraftViewManager } from './systems/MinecraftViewManager';
-import { AutoMiningSystem } from './systems/AutoMiningSystem';
-import { InventoryManager } from './systems/InventoryManager';
-import { BlockBuildingSystem } from './systems/BlockBuildingSystem';
-import { ChatRelaySystem } from './systems/ChatRelaySystem';
-import { ServerStatusManager } from './systems/ServerStatusManager';
 
 dotenv.config();
 
@@ -32,11 +27,6 @@ const mobFarmSystem = new MobFarmSystem();
 const pathfindingSystem = new PathfindingSystem();
 const instanceManager = new MultiInstanceManager();
 const minecraftViewManager = new MinecraftViewManager();
-const autoMiningSystem = new AutoMiningSystem();
-const inventoryManager = new InventoryManager();
-const blockBuildingSystem = new BlockBuildingSystem();
-const chatRelaySystem = new ChatRelaySystem();
-const serverStatusManager = new ServerStatusManager();
 
 // Store active bot sessions
 const activeBots = new Map();
@@ -49,25 +39,23 @@ function generateRandomUsername(): string {
   return `${adjectives[Math.floor(Math.random() * adjectives.length)]}${nouns[Math.floor(Math.random() * nouns.length)]}${number}`;
 }
 
-// Get server status
+// Get server status from Mineflare
 async function getServerStatus(serverAddress: string): Promise<any> {
-  return await serverStatusManager.getServerStatus(serverAddress);
+  return new Promise((resolve) => {
+    exec(`ping -c 1 ${serverAddress} 2>&1`, (error, stdout) => {
+      const isOnline = !error;
+      resolve({
+        online: isOnline,
+        address: serverAddress,
+        status: isOnline ? '🟢 Online' : '🔴 Offline'
+      });
+    });
+  });
 }
 
 client.on('ready', () => {
   console.log(`✅ Bot logged in as ${client.user?.tag}`);
   client.user?.setActivity('Mineflare Server Status', { type: 'WATCHING' });
-});
-
-client.on('messageCreate', async (message) => {
-  if (message.author.bot) return;
-
-  // Chat relay functionality
-  const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === message.author.id);
-  if (sessionId && activeBots.get(sessionId).chatRelay) {
-    const relayedMessage = chatRelaySystem.relayMessage(sessionId, message.author.username, message.content, 'discord');
-    // In production, this would send to Minecraft server
-  }
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -78,15 +66,17 @@ client.on('interactionCreate', async (interaction) => {
     if (interaction.commandName === 'status') {
       const serverAddress = interaction.options.getString('server') || 'play.mineflare.com';
       const status = await getServerStatus(serverAddress);
-      const embed = serverStatusManager.getStatusEmbed(serverAddress, status);
-      await interaction.reply({ embeds: [embed] });
-    }
+      
+      const embed = new EmbedBuilder()
+        .setTitle('🖥️ Mineflare Server Status')
+        .setDescription(`Server: \`${status.address}\``)
+        .addFields(
+          { name: 'Status', value: status.status, inline: true },
+          { name: 'Online', value: status.online ? 'Yes' : 'No', inline: true }
+        )
+        .setColor(status.online ? 0x00FF00 : 0xFF0000)
+        .setTimestamp();
 
-    // SERVER STATUS COMMAND
-    if (interaction.commandName === 'serverstatus') {
-      const serverAddress = interaction.options.getString('server') || 'play.mineflare.com';
-      const status = await getServerStatus(serverAddress);
-      const embed = serverStatusManager.getStatusEmbed(serverAddress, status);
       await interaction.reply({ embeds: [embed] });
     }
 
@@ -109,6 +99,7 @@ client.on('interactionCreate', async (interaction) => {
       const userId = interaction.user.id;
       const sessionId = `${userId}-${Date.now()}`;
 
+      // Create instance
       const instance = instanceManager.createInstance(sessionId, username, serverAddress, javaVersion);
       if (!instance) {
         return await interaction.reply({
@@ -117,6 +108,7 @@ client.on('interactionCreate', async (interaction) => {
         });
       }
 
+      // Create view session
       const viewSession = minecraftViewManager.createViewSession(sessionId, {
         username,
         server: serverAddress,
@@ -131,10 +123,11 @@ client.on('interactionCreate', async (interaction) => {
         .addFields(
           { name: 'Server', value: `\`${serverAddress}\``, inline: true },
           { name: 'Java Version', value: `\`${javaVersion}\``, inline: true },
-          { name: 'Account Type', value: `\`${accountType}\``, inline: true },
+          { name: 'Account Mode', value: `\`${accountMode}\``, inline: true },
           { name: 'Username', value: `\`${username}\``, inline: true },
+          { name: 'Account Type', value: `\`${accountType}\``, inline: true },
           { name: 'Status', value: '🟡 Connecting...', inline: true },
-          { name: 'Dashboard', value: `[Open](http://${minecraftViewManager.getWebDomain()}/#overview)`, inline: true }
+          { name: 'View Bot', value: `[Open Dashboard](http://${minecraftViewManager.getWebDomain()}/#minecraft-view)`, inline: false }
         )
         .setColor(0xFFFF00)
         .setTimestamp();
@@ -147,10 +140,6 @@ client.on('interactionCreate', async (interaction) => {
         username,
         javaVersion,
         viewSession,
-        mining: autoMiningSystem.startAutoMining(userId, sessionId),
-        inventory: inventoryManager.createInventory(userId, sessionId),
-        building: blockBuildingSystem.startBuilding(userId, sessionId),
-        chatRelay: chatRelaySystem.createChatRelay(sessionId, interaction.channelId, userId),
         trading: tradingSystem.startTrading(userId, sessionId),
         enchanting: enchantingSystem.startEnchanting(userId, sessionId),
         brewing: brewingSystem.startBrewing(userId, sessionId),
@@ -166,101 +155,14 @@ client.on('interactionCreate', async (interaction) => {
           .addFields(
             { name: 'Server', value: `\`${serverAddress}\``, inline: true },
             { name: 'Java Version', value: `\`${javaVersion}\``, inline: true },
-            { name: 'Dashboard', value: `[Open](http://${minecraftViewManager.getWebDomain()})`, inline: true }
+            { name: 'Account Type', value: `\`${accountType}\``, inline: true },
+            { name: 'View Bot', value: `[Open Dashboard](http://${minecraftViewManager.getWebDomain()}/#minecraft-view)`, inline: false }
           )
           .setColor(0x00FF00)
           .setTimestamp();
 
         await message.edit({ embeds: [successEmbed] });
       }, 2000);
-    }
-
-    // AUTO MINING COMMAND
-    if (interaction.commandName === 'automining') {
-      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
-      
-      if (!sessionId) {
-        return interaction.reply({
-          content: '❌ No active bot session. Use `/join` first!',
-          ephemeral: true
-        });
-      }
-
-      const embed = autoMiningSystem.getSessionEmbed(sessionId);
-      await interaction.reply({ embeds: [embed] });
-    }
-
-    // INVENTORY COMMAND
-    if (interaction.commandName === 'inventory') {
-      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
-      
-      if (!sessionId) {
-        return interaction.reply({
-          content: '❌ No active bot session. Use `/join` first!',
-          ephemeral: true
-        });
-      }
-
-      const embed = inventoryManager.getInventoryEmbed(sessionId);
-      await interaction.reply({ embeds: [embed] });
-    }
-
-    // BUILDING COMMAND
-    if (interaction.commandName === 'building') {
-      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
-      
-      if (!sessionId) {
-        return interaction.reply({
-          content: '❌ No active bot session. Use `/join` first!',
-          ephemeral: true
-        });
-      }
-
-      const embed = blockBuildingSystem.getSessionEmbed(sessionId);
-      await interaction.reply({ embeds: [embed] });
-    }
-
-    // CHAT RELAY COMMAND
-    if (interaction.commandName === 'chatrelay') {
-      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
-      
-      if (!sessionId) {
-        return interaction.reply({
-          content: '❌ No active bot session. Use `/join` first!',
-          ephemeral: true
-        });
-      }
-
-      const subcommand = interaction.options.getSubcommand();
-
-      if (subcommand === 'status') {
-        const embed = chatRelaySystem.getHistoryEmbed(sessionId);
-        await interaction.reply({ embeds: [embed] });
-      } else if (subcommand === 'toggle') {
-        chatRelaySystem.toggleRelay(sessionId);
-        const config = chatRelaySystem.getConfig(sessionId);
-        await interaction.reply({
-          content: `Chat relay is now ${config?.enabled ? '🟢 **enabled**' : '🔴 **disabled**'}`,
-          ephemeral: true
-        });
-      } else if (subcommand === 'setprefix') {
-        const prefix = interaction.options.getString('prefix') || '[BOT]';
-        chatRelaySystem.setMinecraftPrefix(sessionId, prefix);
-        await interaction.reply({
-          content: `Minecraft prefix set to: \`${prefix}\``,
-          ephemeral: true
-        });
-      } else if (subcommand === 'setrule') {
-        const trigger = interaction.options.getString('trigger');
-        const replacement = interaction.options.getString('replacement');
-        if (trigger && replacement) {
-          chatRelaySystem.setCustomRule(sessionId, trigger, replacement);
-          await interaction.reply({
-            content: `Rule added: \`${trigger}\` → \`${replacement}\``,
-            ephemeral: true
-          });
-        }
-      }
     }
 
     // MINECRAFT VIEW COMMAND
@@ -276,6 +178,103 @@ client.on('interactionCreate', async (interaction) => {
 
       const embed = minecraftViewManager.getMinecraftViewCommand(sessionId);
       await interaction.reply({ embeds: [embed] });
+    }
+
+    // SET DOMAIN COMMAND
+    if (interaction.commandName === 'setdomain') {
+      const domain = interaction.options.getString('domain') || 'localhost:3000';
+      minecraftViewManager.setWebDomain(domain);
+      
+      const embed = new EmbedBuilder()
+        .setTitle('🌐 Domain Updated')
+        .addFields(
+          { name: 'New Domain', value: `\`${domain}\``, inline: false },
+          { name: 'Dashboard URL', value: `[Access Dashboard](http://${domain})`, inline: false }
+        )
+        .setColor(0x00FF00)
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [embed] });
+    }
+
+    // TRADING COMMANDS
+    if (interaction.commandName === 'trading') {
+      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
+      
+      if (!sessionId) {
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
+      }
+
+      const embed = tradingSystem.getSessionEmbed(sessionId);
+      await interaction.reply({ embeds: [embed] });
+    }
+
+    // ENCHANTING COMMANDS
+    if (interaction.commandName === 'enchanting') {
+      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
+      
+      if (!sessionId) {
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
+      }
+
+      const embed = enchantingSystem.getSessionEmbed(sessionId);
+      await interaction.reply({ embeds: [embed] });
+    }
+
+    // BREWING COMMANDS
+    if (interaction.commandName === 'brewing') {
+      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
+      
+      if (!sessionId) {
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
+      }
+
+      const embed = brewingSystem.getSessionEmbed(sessionId);
+      await interaction.reply({ embeds: [embed] });
+    }
+
+    // FISHING COMMANDS
+    if (interaction.commandName === 'fishing') {
+      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
+      
+      if (!sessionId) {
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
+      }
+
+      const embed = fishingSystem.getSessionEmbed(sessionId);
+      await interaction.reply({ embeds: [embed] });
+    }
+
+    // MOB FARM COMMANDS
+    if (interaction.commandName === 'mobfarm') {
+      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
+      
+      if (!sessionId) {
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
+      }
+
+      const embed = mobFarmSystem.getSessionEmbed(sessionId);
+      await interaction.reply({ embeds: [embed] });
+    }
+
+    // PATHFINDING COMMANDS
+    if (interaction.commandName === 'pathfinding') {
+      const sessionId = Array.from(activeBots.keys()).find(id => activeBots.get(id).userId === interaction.user.id);
+      
+      if (!sessionId) {
+        return interaction.reply({ content: '❌ No active bot session. Use `/join` first!', ephemeral: true });
+      }
+
+      if (interaction.options.getSubcommand() === 'addwaypoint') {
+        const name = interaction.options.getString('name') || 'Waypoint';
+        const x = interaction.options.getNumber('x') || 0;
+        const y = interaction.options.getNumber('y') || 64;
+        const z = interaction.options.getNumber('z') || 0;
+
+        pathfindingSystem.addWaypoint(sessionId, { name, x, y, z });
+        const embed = pathfindingSystem.getSessionEmbed(sessionId);
+        await interaction.reply({ embeds: [embed] });
+      }
     }
 
     // INSTANCES COMMAND
