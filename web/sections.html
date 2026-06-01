@@ -1,0 +1,146 @@
+// Add to existing web/index.html - add these sections before closing main tag
+
+<!-- Auto Mining Section -->
+<section id="automining" class="section">
+    <div class="section-header">
+        <h2><i class="fas fa-hammer"></i> Auto Mining System</h2>
+        <p>Automated block mining and collection</p>
+    </div>
+    <div class="system-card-large">
+        <div class="mining-stats">
+            <div class="stat-item">
+                <span>Total Blocks Mined</span>
+                <strong>8,234</strong>
+            </div>
+            <div class="stat-item">
+                <span>Current Block</span>
+                <strong>Diamond Ore</strong>
+            </div>
+            <div class="stat-item">
+                <span>Mining Speed</span>
+                <strong>125 blocks/min</strong>
+            </div>
+            <div class="stat-item">
+                <span>Status</span>
+                <strong class="status-badge active">ACTIVE</strong>
+            </div>
+        </div>
+        <div class="mining-queue">
+            <h3>Mining Queue</h3>
+            <div class="queue-list">
+                <div class="queue-item">🔨 Stone - 100/500</div>
+                <div class="queue-item">⚙️ Iron Ore - 45/200</div>
+                <div class="queue-item">💎 Diamond Ore - 12/50</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Inventory Section -->
+<section id="inventory" class="section">
+    <div class="section-header">
+        <h2><i class="fas fa-backpack"></i> Inventory Management</h2>
+        <p>Real-time inventory tracking</p>
+    </div>
+    <div class="inventory-grid">
+        <div class="inventory-slot" data-item="Diamond Ore"><span>💎</span><p>Diamond Ore</p><small>x45</small></div>
+        <div class="inventory-slot" data-item="Iron Ore"><span>⚙️</span><p>Iron Ore</p><small>x124</small></div>
+        <div class="inventory-slot" data-item="Coal"><span>🖤</span><p>Coal</p><small>x64</small></div>
+        <div class="inventory-slot" data-item="Stone"><span>🪨</span><p>Stone</p><small>x64</small></div>
+        <div class="inventory-slot" data-item="Gold Ore"><span>🟡</span><p>Gold Ore</p><small>x28</small></div>
+        <div class="inventory-slot" data-item="Emerald"><span>🟢</span><p>Emerald</p><small>x12</small></div>
+        <div class="inventory-slot" data-item="Pickaxe"><span>⛏️</span><p>Pickaxe</p><small>Durability: 450/500</small></div>
+        <div class="inventory-slot" data-item="Sword"><span>🗡️</span><p>Sword</p><small>Durability: 280/500</small></div>
+        <div class="inventory-slot" data-item="Torch"><span>🔦</span><p>Torch</p><small>x32</small></div>
+    </div>
+</section>
+
+<!-- Building Section -->
+<section id="building" class="section">
+    <div class="section-header">
+        <h2><i class="fas fa-cube"></i> Block Building System</h2>
+        <p>Automated block placement and construction</p>
+    </div>
+    <div class="system-card-large">
+        <div class="building-grid">
+            <div class="build-item">
+                <h4>Wall Pattern</h4>
+                <p class="build-progress">1,250 / 2,000 blocks</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 62.5%;"></div>
+                </div>
+            </div>
+            <div class="build-item">
+                <h4>Roof Pattern</h4>
+                <p class="build-progress">800 / 1,200 blocks</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 66.7%;"></div>
+                </div>
+            </div>
+            <div class="build-item">
+                <h4>Floor Pattern</h4>
+                <p class="build-progress">450 / 500 blocks</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="system-stats">
+            <div class="stat-item">
+                <span>Total Blocks Placed</span>
+                <strong>5,840</strong>
+            </div>
+            <div class="stat-item">
+                <span>Blocks/Minute</span>
+                <strong>95</strong>
+            </div>
+            <div class="stat-item">
+                <span>Active Jobs</span>
+                <strong>3</strong>
+            </div>
+            <div class="stat-item">
+                <span>Status</span>
+                <strong class="status-badge active">ACTIVE</strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Chat Relay Section -->
+<section id="chatrelay" class="section">
+    <div class="section-header">
+        <h2><i class="fas fa-comments"></i> Chat Relay</h2>
+        <p>Discord to Minecraft chat relay with custom rules</p>
+    </div>
+    <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message discord">
+                <span class="chat-username">Hypixelpl</span>
+                <span class="chat-source" title="From Discord">💬</span>
+                <span class="chat-text">Hey everyone! The bot is working great!</span>
+            </div>
+            <div class="chat-message minecraft">
+                <span class="chat-username">BravePlayer2024</span>
+                <span class="chat-source" title="From Minecraft">🎮</span>
+                <span class="chat-text">[BOT] Thanks for the update!</span>
+            </div>
+            <div class="chat-message discord">
+                <span class="chat-username">Admin</span>
+                <span class="chat-source" title="From Discord">💬</span>
+                <span class="chat-text">Performance looks stable</span>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Type a message..." />
+            <button id="chatSendBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+        <div class="chat-settings">
+            <label>
+                <input type="checkbox" id="relayEnabled" checked />
+                Relay Enabled
+            </label>
+            <input type="text" id="prefixInput" placeholder="Set prefix" value="[BOT]" />
+            <button id="setPrefixBtn">Set Prefix</button>
+        </div>
+    </div>
+</section>

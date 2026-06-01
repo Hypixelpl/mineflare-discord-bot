@@ -1,0 +1,296 @@
+/* Add to web/styles.css */
+
+/* Mining System */
+.mining-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.mining-queue {
+    padding: 15px;
+    background: rgba(51, 65, 85, 0.2);
+    border-radius: 12px;
+}
+
+.mining-queue h3 {
+    margin-bottom: 12px;
+    font-size: 1.1em;
+}
+
+.queue-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.queue-item {
+    padding: 10px;
+    background: rgba(51, 65, 85, 0.3);
+    border-left: 3px solid var(--primary);
+    border-radius: 6px;
+    font-size: 0.9em;
+}
+
+/* Inventory Grid */
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+}
+
+.inventory-slot {
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    padding: 10px;
+}
+
+.inventory-slot:hover {
+    border-color: var(--primary);
+    background: rgba(59, 130, 246, 0.15);
+    transform: scale(1.05);
+}
+
+.inventory-slot span {
+    font-size: 2.5em;
+    margin-bottom: 5px;
+}
+
+.inventory-slot p {
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+
+.inventory-slot small {
+    font-size: 0.7em;
+    color: rgba(226, 232, 240, 0.6);
+}
+
+/* Building System */
+.building-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.build-item {
+    padding: 15px;
+    background: rgba(51, 65, 85, 0.2);
+    border-radius: 12px;
+    border-left: 4px solid var(--primary);
+}
+
+.build-item h4 {
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+
+.build-progress {
+    font-size: 0.9em;
+    margin-bottom: 8px;
+    color: rgba(226, 232, 240, 0.7);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(51, 65, 85, 0.4);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #60a5fa);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* Chat Relay */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(51, 65, 85, 0.2);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.chat-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: rgba(51, 65, 85, 0.3);
+    border-radius: 8px;
+    border-left: 3px solid transparent;
+    animation: slideIn 0.3s ease;
+}
+
+.chat-message.discord {
+    border-left-color: #5865F2;
+}
+
+.chat-message.minecraft {
+    border-left-color: #00FF00;
+}
+
+.chat-username {
+    font-weight: bold;
+    color: var(--primary);
+    min-width: 120px;
+}
+
+.chat-source {
+    font-size: 1.2em;
+    min-width: 20px;
+}
+
+.chat-text {
+    flex: 1;
+    color: rgba(226, 232, 240, 0.9);
+    word-break: break-word;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 10px;
+}
+
+#chatInput {
+    flex: 1;
+    padding: 12px 15px;
+    background: rgba(51, 65, 85, 0.3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.95em;
+}
+
+#chatInput:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+#chatSendBtn {
+    padding: 12px 20px;
+    background: var(--primary);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#chatSendBtn:hover {
+    background: var(--secondary);
+}
+
+.chat-settings {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    background: rgba(51, 65, 85, 0.2);
+    border-radius: 8px;
+    flex-wrap: wrap;
+}
+
+.chat-settings label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.chat-settings label input {
+    cursor: pointer;
+}
+
+#prefixInput {
+    padding: 8px 12px;
+    background: rgba(51, 65, 85, 0.3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 0.9em;
+}
+
+#setPrefixBtn {
+    padding: 8px 16px;
+    background: var(--success);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#setPrefixBtn:hover {
+    opacity: 0.9;
+}
+
+/* Server Status Widget */
+.server-status-widget {
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .inventory-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .building-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chat-messages {
+        height: 250px;
+    }
+
+    .chat-input-area {
+        flex-direction: column;
+    }
+
+    .chat-settings {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #prefixInput,
+    #setPrefixBtn {
+        width: 100%;
+    }
+}
