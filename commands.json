@@ -1,0 +1,103 @@
+[
+  {
+    "name": "status",
+    "description": "Check the status of a Mineflare server",
+    "options": [
+      {
+        "name": "server",
+        "description": "Server address (e.g., play.mineflare.com)",
+        "type": 3,
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "join",
+    "description": "Join a Mineflare server with a bot account",
+    "options": [
+      {
+        "name": "server",
+        "description": "Server address to join",
+        "type": 3,
+        "required": true
+      },
+      {
+        "name": "java-version",
+        "description": "Java version (e.g., 1.8, 11, 17, 21)",
+        "type": 3,
+        "required": false,
+        "choices": [
+          { "name": "Java 1.8", "value": "1.8" },
+          { "name": "Java 11", "value": "11" },
+          { "name": "Java 16", "value": "16" },
+          { "name": "Java 17", "value": "17" },
+          { "name": "Java 21", "value": "21" }
+        ]
+      },
+      {
+        "name": "account-mode",
+        "description": "Account mode (offline or premium)",
+        "type": 3,
+        "required": false,
+        "choices": [
+          { "name": "Offline", "value": "offline" },
+          { "name": "Premium", "value": "premium" }
+        ]
+      },
+      {
+        "name": "username",
+        "description": "Custom username (auto-generated if offline, ignored if premium)",
+        "type": 3,
+        "required": false
+      },
+      {
+        "name": "account-type",
+        "description": "Account type (cracked or premium)",
+        "type": 3,
+        "required": false,
+        "choices": [
+          { "name": "Cracked", "value": "cracked" },
+          { "name": "Premium", "value": "premium" }
+        ]
+      },
+      {
+        "name": "message",
+        "description": "Custom join message",
+        "type": 3,
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "mine",
+    "description": "Start mining on the server"
+  },
+  {
+    "name": "combat",
+    "description": "Start combat with an enemy",
+    "options": [
+      {
+        "name": "enemy",
+        "description": "Type of enemy to fight",
+        "type": 3,
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "place",
+    "description": "Start placing blocks",
+    "options": [
+      {
+        "name": "block-type",
+        "description": "Type of block to place",
+        "type": 3,
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "leave",
+    "description": "Disconnect the bot from the server"
+  }
+]
